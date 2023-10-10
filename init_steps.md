@@ -148,7 +148,7 @@ def hello(request):
     # acá se construye una respuesta http. entonces acña se puede contruir una respuesta http
     return HttpResponse("Hello world")
     # con esto se puede ver en el navegador la respuesta http
-``` 
+```
 
 acá se construye una respueta Http, que es lo que se va a mostrar en pantalla. para ello se importa el modulo `HttpResponse` de django.
 
@@ -164,7 +164,8 @@ urlpatterns = [
     path('', views.hello, name='hello'),
 ]
 ```
-acá se puede complejisar el uso de las urls, para ello se crear en la carpeta `first_app` un archivo llamado `urls.py` y se define la ruta que se quiere utilizar.
+
+Acá se puede complejisar el uso de las urls, para ello se crear en la carpeta `first_app` un archivo llamado `urls.py` y se define la ruta que se quiere utilizar.
 
 ```python
 # se exporta una lista nueva 
@@ -239,8 +240,7 @@ Ahora todas las urls, que están en `firts_app/urls.py` se deben modificar, para
 
 Revision de la base de datos
 
-cuando se ejecura la app se puede ejecutar  el compando `python manage.py migrate` para aplicar alog 
-(`Runt 'python manage.py migrate' to apply them.`) este comando se encarga de crear las tablas en la base de datos, que se crearon en el archivo `models.py` de la app `first_app`
+cuando se ejecura la app se puede ejecutar  el compando `python manage.py migrate` para aplicar alog (`Runt 'python manage.py migrate' to apply them.`) este comando se encarga de crear las tablas en la base de datos, que se crearon en el archivo `models.py` de la app `first_app`
 
 Al ejecutar el comando `python manage.py runserver` sin realizar el paso recomendado, tendremos el siguiente error:
 
@@ -289,9 +289,9 @@ Running migrations:
   Applying auth.0011_update_proxy_permissions... OK
   Applying auth.0012_alter_user_first_name_max_length... OK
   Applying sessions.0001_initial... OK
-  ````
+````
 
-Para vizualizar las tablas y la base de datos, se puede utilizar el programa 
+Para vizualizar las tablas y la base de datos, se puede utilizar el programa
 `DB Browser for SQLite` este programa permite vizualizar la base de datos, y las tablas que se crearon.
 
 Además de construir las tablas dentro de la base de datos, se creo una nueva carpeta llamda `migration` dentro de la carpeta `first_app` y dentro de esta carpeta se creó el archivo `__init__.py`
@@ -303,7 +303,6 @@ Puede que nosotros, querramos crear nuevas tablas, para cualquier tipo de proyec
 ### Crear un modelo
 
 Un modelo como se mencionó anteriorme es una clase de python, que se va a convertir en una tabla de la base de datos. para ello se debe crear un archivo llamado `models.py` dentro de la carpeta `first_app` y se debe importar el modulo `models` de django.
-
 
 Entonces en el archivo `first_app/models.py` se debe crear una clase que herede de `models.Model` y se debe definir los campos que se quieren crear en la tabla de la base de datos.
 
@@ -324,7 +323,7 @@ Cuando se trabaja con SQL. uno define el tipo de columna. en este caso se define
 
 Con esto le estoy diciendo que voy a contruir una tabla llamada `Project` y que va a tener un campo llamado `name` que va a ser de tipo `CharField` y que va a tener un tamaño máximo de 100 caracteres.
 
-Si yo ejecuto `python manage.py runserver`, no me aparecerá ningun warning de cambios, es porque aún este modelo no está conectado con el proyecto. 
+Si yo ejecuto `python manage.py runserver`, no me aparecerá ningun warning de cambios, es porque aún este modelo no está conectado con el proyecto.
 
 Para conectarlo, debo ir al archivo `first_web/settings.py` y en la lista `INSTALLED_APPS` debo agregar la app `first_app` que es la que contiene el modelo que se quiere conectar. La lista `INSTALLED_APPS` permite conectar las apps que se crean en el proyecto.
 
@@ -339,6 +338,7 @@ INSTALLED_APPS = [
     'first_app', # Agrega la app creada
 ]
 ```
+
 Un error que me ocurrio fue definir en `first_web/settings.py` la base de datos con otro nombre, entonces al ejecutar el comando `python manage.py makemigrations first_app` me salto el siguiente error:
 
 ```zsh
@@ -436,7 +436,6 @@ class Migration(migrations.Migration):
 
 Ahora si yo ejecuto `python manage.py migrate` esto ejecutará todas las migraciones
 
-
 Otra cosa a considerar, si yo desee cambiar el formato de mi base de datos, puedo ir a `firt_web/settings.py` y cambiar el tipo de base de datos, por ejemplo de `sqlite3` a `mysql` o `postgresql` y luego ejecutar el comando `python manage.py migrate` y se aplicarán los cambios en la base de datos. Acá se recomienda a ir a la documentación de Django para ver cómo se debe configurar la base de datos.
 
 ## Django Shell 1:08:00
@@ -476,6 +475,7 @@ Aora si deseamos objteer un objeto en especifico, se puede utilizar el siguiente
 Proyect.objects.get(id=1) # acá se obtiene el objeto con id 1
 <Project: Project object (1)>
 ```
+
 De esta forma puedo consultar un objeto en especifico. también puedo consultar un objeto en especifico utilizando el nombre del objeto.
 
 ```python
@@ -540,7 +540,7 @@ En este paso se mostrará como recibir datos desde el navegador para luego pasar
 
 acá se debe conocer el concepto de params, que son los parametros que se reciben desde el navegador.
 
-Primero vamos a ejecutar el comando `python manage.py runserver` para lanzar el servidor. 
+Primero vamos a ejecutar el comando `python manage.py runserver` para lanzar el servidor.
 
 En el archivo `first_web/urls.py` se definirá la ruta de inicio de la pagina web, asociandola a la vista `hello` de la app `first_app`.
 
@@ -583,6 +583,7 @@ def index(request):
 ```
 
 Ahora puedo editar views.py para que en hello pueda imptimir el valor.
+
 ``` python
     return HttpResponse(f"<h1>Hello {username}</h1>")
 ```
@@ -595,7 +596,7 @@ Otra modificacion que puedo realizar es que `username` ahora es un `int`, defini
 
 Esto implica que ahora en la funcion `hello` de `first_app/views.py` se debe recibir un `int` y no un `str`. por lo cual puedo realizar operaciones matematicas con la variable id que recibe. Esto tambien implica que si yo defino un entero en el url y lo defino en la vista como un string, me arrojará un error. que no puedo realizar operaciones matematicas con un `str`.
 
-#### Params y Models
+### Params y Models
 
 En `first_app/views.py`
 
@@ -734,4 +735,4 @@ Ahora voy a `http://http://127.0.0.1:8000/admin/` e ingreso con el usuario (No e
 
 El panel es lo que viene por defecto por Django, pero se puede modificar, para ello se debe ir a `first_app/admin.py` y se debe importar el modelo `Project` de `first_app/models.py` y luego registrar el modelo `Project` en el panel de administración.
 
-```python
+### Django Admin Customization 1:41:00
