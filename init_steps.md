@@ -692,3 +692,46 @@ def tasks(request,id:int):
     task = get_object_or_404(Task, id=id)
     return HttpResponse(f"<h1>Task title: {task.title}</h1>")
 ```
+
+Esto arroja `Page not found (404)` en lugar de un error.
+
+En lugar de poner una busqueda por id, se puede realizar una busqueda por nombre. para ello debo editar `first_app/urls.py`
+
+```python
+    path('tasks/<str:title>', views.tasks),
+```
+
+Luego editar `first_app/views.py`
+
+```python
+def tasks(request,title:str):
+    task = get_object_or_404(Task, title=title)
+    return HttpResponse(f"<h1>Task title: {task.title}</h1>")
+```
+
+## Django Admin
+
+En este paso se mostrará como crear un panel de administración de la aplicación. Esto esta definido en una ruta dentro de `firts_web/urls.py` que es `path('admin/', admin.site.urls),` y se puede acceder a ella desde `http://http://127.0.0.1:8000/admin/`
+
+ese link, muestra cómo se ve el panel de administración de Django, que es un panel que se crea por defecto, y que permite administrar los usuarios, y las tablas que se crearon en la base de datos. Este panel es creado por `admin.site.urls`.
+
+Estos usuarios son los que se crean en la tabla `auth_user` de la base de datos. se pueden ingresar manualmente en la base de datos. Pero también se pueden crear usando los comando de `manage.py`. Además de crear el usuario va a implementar determinadas lógicas para enciptar la contraseña.
+
+Para crear un usuario se debe ejecutar el comando `python manage.py createsuperuser` y se debe ingresar un nombre de usuario, un correo electrónico y una contraseña.
+
+```zsh
+(venv) (base) a4657925@MFH71416CPW web_app_jango % python manage.py createsuperuser
+Username (leave blank to use 'a4657925'): admin
+Email address: admin@django.com
+Password: adminpassword
+Password (again): adminpassword
+Superuser created successfully.
+
+python manage.py runserver
+```
+
+Ahora voy a `http://http://127.0.0.1:8000/admin/` e ingreso con el usuario (No el correo) y contraseña creados. y se puede vizualizar el panel de administración de Django.
+
+El panel es lo que viene por defecto por Django, pero se puede modificar, para ello se debe ir a `first_app/admin.py` y se debe importar el modelo `Project` de `first_app/models.py` y luego registrar el modelo `Project` en el panel de administración.
+
+```python

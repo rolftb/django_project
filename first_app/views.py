@@ -3,6 +3,9 @@ from django.http import(
     HttpResponse,
     JsonResponse, # Para retornar un json, esto permite que se pueda usar en una API
     )
+# Esto es para poder usar el modelo de la base de datos
+from django.shortcuts import get_object_or_404
+
 # Se importan los modelos de la app, para poder usarlos en las vistas
 from .models import (Project, Task)
 
@@ -22,5 +25,7 @@ def projects(request):
     return JsonResponse(projects, safe=False)
 
 def tasks(request,id:int):
-    task=Task.objects.get(id=id)
+    # trae la tarea que tenga el id que se le pasa por parametro
+    # pero si no existe retorna un error 404
+    task = get_object_or_404(Task, id=id)
     return HttpResponse(f"<h1>Task title: {task.title}</h1>")
