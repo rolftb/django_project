@@ -437,4 +437,111 @@ class Migration(migrations.Migration):
 Ahora si yo ejecuto `python manage.py migrate` esto ejecutará todas las migraciones
 
 
-Otra cosa a considerar, si yo desee cambiar el formato de mi base de datos, puedo ir a `firt_web/settings.py` y cambiar el tipo de base de datos, por ejemplo de `sqlite3` a `mysql` o `postgresql` y luego ejecutar el comando `python manage.py migrate` y se aplicarán los cambios en la base de datos.
+Otra cosa a considerar, si yo desee cambiar el formato de mi base de datos, puedo ir a `firt_web/settings.py` y cambiar el tipo de base de datos, por ejemplo de `sqlite3` a `mysql` o `postgresql` y luego ejecutar el comando `python manage.py migrate` y se aplicarán los cambios en la base de datos. Acá se recomienda a ir a la documentación de Django para ver cómo se debe configurar la base de datos.
+
+## Django Shell 1:08:00
+
+En este paso se mostrará como interactuar con la base de datos, utilizando el shell de Django.
+
+Para ello se debe ejecutar el comando `python manage.py shell` y se abrirá el shell de Django.
+
+```zsh
+(venv) (base) a4657925@MFH71416CPW web_app_jango % python manage.py shell
+Python 3.10.13 (main, Sep 11 2023, 08:16:02) [Clang 14.0.6 ] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from first_app.models import (Project, Task)
+# Acá voy a crear un objeto basado en la clase Project
+>>> p = Project(name='aplicacion movil') # debo guardarlo en una variable
+>>> p
+<Project: Project object (None)>
+>>> p.save() # acá se guarda en la base de datos
+>>> Project(name='aplicacion web usando Django').save()
+```
+
+Esto lo que hizo es guardar un nuevo proyecto en la tabla `Project` de la base de datos.
+
+En el caso que quiera alistar estos cambios puedo ejecutar el siguiente comando:
+
+```python
+>>> Project.objects.all() # acá se muestran todos los objetos de la tabla Project.
+<QuerySet [<Project: Project object (1)>, <Project: Project object (2)>]>
+```
+
+Esto muestra una lista que indica que hay dos objetos en la tabla `Project` con los id `1` y `2`.
+
+Aora si deseamos objteer un objeto en especifico, se puede utilizar el siguiente comando:
+
+```python
+Proyect.objects.get(id=1) # acá se obtiene el objeto con id 1
+<Project: Project object (1)>
+```
+De esta forma puedo consultar un objeto en especifico. también puedo consultar un objeto en especifico utilizando el nombre del objeto.
+
+```python
+Project.objects.get(name='aplicacion movil')
+<Project: Project object (1)>
+```
+
+En el caso que me equivoque de nombre, esto me arrojará un error.
+
+para ejecutar las tareas es un poco complejo, porque estas están asociadas a un proyecto.
+
+```python
+from first_app.models import (Project, Task)
+# Primero debo buscar un proyecto en especifico
+p = Project.objects.get(name='aplicacion movil')
+
+# si yo deseo guardar una tarea dentro de este objeto, debo referenciar el proyecto. por ello guardo el proyecto en una variable p
+
+# consultemos las tareas asociadas a este proyecto
+p.task_set.all()
+<QuerySet []>
+```
+
+Esto entrega un QuerySet vacio, porque no hay tareas asociadas a este proyecto.
+
+Si voy a la base de datos, las tareas las define en minuscula, y separadas por guiones bajos. entonces la tabla de la base de datos se llama `first_app_task` y no `first_app_Task` como se definió en el modelo.
+
+Ahora voy a crear una tarea asociada a este proyecto.
+
+```python
+p.task_set.create(
+    title='crear el modelo de la base de datos',
+    description='crear el modelo de la base de datos, para almacenar las tareas asociadas a un proyecto')
+
+p.task_set.create(
+    title='desarrollar login',
+    )
+```
+
+De esta forma podré genera los datos de las tareas.
+
+```python
+p.task_set.all() # acá se muestran todas las tareas asociadas al proyecto
+
+# tambien puedo obtener una tarea en especifico
+p.task_set.get(id=1)
+<Task: Task object (1)>
+```
+
+ahora realizaré una busqueda usando el metodo `filter` que permite filtrar los datos de la base de datos.
+
+```python
+Project.objects.filter(name='aplicacion movil')
+
+# quiero los name que comiencen con el nombre aplicacion
+Project.objects.filter(name__startswith='aplicacion')
+```
+
+## Django Params 1:20:00
+
+En este paso se mostrará como recibir datos desde el navegador para luego pasarlo por operaciones en una base de datos.
+
+acá se debe conocer el concepto de params, que son los parametros que se reciben desde el navegador.
+
+Primero vamos a ejecutar el comando `python manage.py runserver` para lanzar el servidor. 
+
+En el archivo `first_web/urls.py` se definirá la ruta de inicio de la pagina web.
+
+```python
