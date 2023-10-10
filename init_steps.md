@@ -709,7 +709,7 @@ def tasks(request,title:str):
     return HttpResponse(f"<h1>Task title: {task.title}</h1>")
 ```
 
-## Django Admin
+## Django Admin 1:38:00
 
 En este paso se mostrará como crear un panel de administración de la aplicación. Esto esta definido en una ruta dentro de `firts_web/urls.py` que es `path('admin/', admin.site.urls),` y se puede acceder a ella desde `http://http://127.0.0.1:8000/admin/`
 
