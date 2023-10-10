@@ -7,5 +7,7 @@ urlpatterns = [
     # Esto es una ruta con parametros, acá además se 
     # define que esta variable es un string
     path('hello/<str:username>', views.hello),
+    path('projects/', views.projects),
+    path('tasks/<int:id>', views.tasks),
     
 ]

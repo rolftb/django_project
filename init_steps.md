@@ -581,3 +581,114 @@ from django.http import HttpResponse
 def index(request):
     return HttpResponse("<h1>Index</h1>")
 ```
+
+Ahora puedo editar views.py para que en hello pueda imptimir el valor.
+``` python
+    return HttpResponse(f"<h1>Hello {username}</h1>")
+```
+
+Otra modificacion que puedo realizar es que `username` ahora es un `int`, definiendo en `first_app/urls.py` el tipo de variable que se recibe.
+
+```python
+    path('hello/<int:id>', views.hello)
+```
+
+Esto implica que ahora en la funcion `hello` de `first_app/views.py` se debe recibir un `int` y no un `str`. por lo cual puedo realizar operaciones matematicas con la variable id que recibe. Esto tambien implica que si yo defino un entero en el url y lo defino en la vista como un string, me arrojará un error. que no puedo realizar operaciones matematicas con un `str`.
+
+#### Params y Models
+
+En `first_app/views.py`
+
+```python
+# Ahora crearemos una nueva vista llamada projects y otra llamada tasks
+def projects(request):
+    return HttpResponse("<h1>Projects</h1>")
+def tasks(request):
+    return HttpResponse("<h1>Tasks</h1>")
+```
+
+Recordar que deben agregarse en la `first_app/urls.py`
+
+```python
+    path('projects/', views.projects),
+    path('tasks/', views.tasks),
+```
+
+Si yo quiero mostrar todos los proyectos que tengo en la base de datos, debo realizar consultas a la base de datos, para ello debo importar el modelo `Project` de `first_app/models.py` y luego realizar la consulta a la base de datos.
+
+En `first_app/views.py` debo importar los modelos de la base de datos.
+`import .models import (Project, Task)`
+
+```python
+import .models import (Project, Task)
+def projects(request):
+    projects = Project.objects.all()
+    return JsonResponse(projects)
+```
+
+Esto me arroja el siguiente error:
+
+```zsh
+ File "/Users/a4657925/Visual_Solution/web_app_jango/first_app/views.py", line 21, in projects
+    return JsonResponse(projects)
+  File "/Users/a4657925/Visual_Solution/web_app_jango/venv/lib/python3.10/site-packages/django/http/response.py", line 724, in __init__
+    raise TypeError(
+
+Exception Type: TypeError at /projects/
+Exception Value: In order to allow non-dict objects to be serialized set the safe parameter to False.
+```
+
+Esto implica que no puedo retornar un objeto de tipo `Project` de la base de datos, porque no es un diccionario. para ello debo importar el modulo `JsonResponse` de django y luego retornar el objeto `projects` como un diccionario.
+Por otro lado además indica que el parametro `safe` debe ser `False` para que se pueda retornar un objeto que no sea un diccionario.
+
+La solución es la siguiente:
+
+```python
+import .models import (Project, Task)
+def projects(request):
+    projects = list(project.objects.all())
+    return JsonResponse(projects, safe=False)
+```
+
+Se soluciona de la siguiente forma
+
+```python
+def projects(request):
+projects =list(Project.objects.all().values())
+return JsonResponse(projects, safe=False)
+```
+
+Ahora realicemos una extracción de una tarea en especifico. se configura en `first_app/urls.py`
+
+```python
+    path('tasks/<int:id>', views.tasks),
+```
+
+Esto implica que puedo ingresar un número en la función de tareas y tengo que ajustar la función de tareas para que reciba un parametro.
+
+```python
+def tasks(request,id:int):
+    task=Task.objects.get(id=id)
+    return HttpResponse(f"<h1>Task title: {task.title}</h1>")
+```
+
+Esto hará que yo al ingresar a `http://127.0.0.1:8000/tasks/2` me entregue el mensaje `Task title: desarrollar login`.
+
+Ahora sí yo ingreso un id que no existe en la url como `http://127.0.0.1:8000/tasks/3` esto hará que yo tenga un erro, que implica la caida del servidor.
+
+Ahora lo que hará es que  en lugar de mostrar un error, hará que muestre un 404, que es un error que no se encontró la página.
+
+```python
+from django.shortcuts import get_object_or_404
+````
+
+Esta funcion permite obtener un objeto de la base de datos, y si no lo encuentra, me arroja un 404. Esto es mas conveniente para la aplicación.
+
+ahora reemplazamos el paso anterior por el siguiente:
+
+```python
+from django.shortcuts import get_object_or_404
+def tasks(request,id:int):
+    task = get_object_or_404(Task, id=id)
+    return HttpResponse(f"<h1>Task title: {task.title}</h1>")
+```
