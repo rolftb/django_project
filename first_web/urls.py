@@ -23,6 +23,6 @@ from django.urls import (
 urlpatterns = [
     path('admin/', admin.site.urls),
     # Incluye las urls de la app first_app
-    path('first_app/', # Esto es un prefijo, que se incorpora antes de las urls que yo defino en first_app
+    path('', # Esto es un prefijo, que se incorpora antes de las urls que yo defino en first_app
          include('first_app.urls')),
 ]

@@ -542,6 +542,42 @@ acá se debe conocer el concepto de params, que son los parametros que se recibe
 
 Primero vamos a ejecutar el comando `python manage.py runserver` para lanzar el servidor. 
 
-En el archivo `first_web/urls.py` se definirá la ruta de inicio de la pagina web.
+En el archivo `first_web/urls.py` se definirá la ruta de inicio de la pagina web, asociandola a la vista `hello` de la app `first_app`.
+
+Ahora en `firts_app/urls.py` podemos definir una nueva ruta, que se asociará a la vista `hello` de la app `first_app` e incluir en ella los parametros que se quieren recibir.
 
 ```python
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.hello),
+    path('about/', views.about),
+    path('hello/<str:username>', views.hello), # Esto es una ruta con parametros, acá además se define que esta variable es un string
+]
+Ahora voy a  `first_app/views.py` y voy a modificar la vista `hello` para que reciba el parametro `username` y lo muestre en pantalla.
+
+```python
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def hello(request, username:str):
+    print(username)
+    return HttpResponse("<h1>Hello world</h1>")
+def about(request):
+    return HttpResponse("<h1>About</h1>")
+```
+
+Ahora si yo en la url escribo `http://<>/hello/andres` se mostrará en la terminal `andres` y en la pagina web `Hello world`.
+
+Si yo no coloco ese valor adiciona el la url, me arrojará error, porque se exige esto en la url.
+
+Ahora surge un problema, cómo tengo la vews.hello definido a un directorio sin recibir el parametro, esto me traerá un error por lo tanto, tengo que crear una nueva vista que no reciba el parametro.
+
+```python
+from django.shortcuts import render
+from django.http import HttpResponse
+# view llamada Index que no recibe parametros
+def index(request):
+    return HttpResponse("<h1>Index</h1>")
+```
