@@ -8,6 +8,7 @@ urlpatterns = [
     # define que esta variable es un string
     path('hello/<str:username>', views.hello),
     path('projects/', views.projects),
-    path('tasks/<int:id>', views.tasks),
+    # path('tasks/<int:id>', views.tasks), # se desactivo el parametro
+    path('tasks/', views.tasks)
     
 ]
