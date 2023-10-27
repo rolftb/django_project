@@ -736,3 +736,40 @@ Ahora voy a `http://http://127.0.0.1:8000/admin/` e ingreso con el usuario (No e
 El panel es lo que viene por defecto por Django, pero se puede modificar, para ello se debe ir a `first_app/admin.py` y se debe importar el modelo `Project` de `first_app/models.py` y luego registrar el modelo `Project` en el panel de administración.
 
 ### Django Admin Customization 1:41:00
+
+En este paso se mostrará como personalizar el panel de administración de Django.
+
+## Render Templates 1:48:00
+
+se está utilizando `views.py`, acá se retorna strings:
+
+```python
+def hello(request,usertname):
+    return HttpResponse(
+        f"<h1>Hello {username}</h1>"
+        )
+```
+Esto se suele utilizar con procesos mas simples, pero si se quiere realizar procesos mas complejos, se debe utilizar templates.
+
+Los templates, que son archivos html, que se pueden renderizar desde Django.
+
+Para ello se debe crear una carpeta llamada `templates` dentro de la carpeta `first_app` y dentro de esta carpeta se debe crear un archivo llamado `index.html` y se debe escribir el siguiente código:
+
+ahora en `first_app/views.py` se debe importar el modulo `render` de django.
+
+
+```python
+# se importa el modulo render
+from django.shortcuts import render
+
+# se renderiza o se envie el template index.html
+def index(request):
+    return render(request, 'index.html')
+```
+
+Ahora si yo voy a ``http://http://127.0.0.1:8000/` se mostrará el template `index.html`
+
+ahora craremos un html para:
+- project
+- tarsk
+- about
