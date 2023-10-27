@@ -773,3 +773,51 @@ ahora craremos un html para:
 - project
 - tarsk
 - about
+
+ya realizado, esto y la modificiacion en `first_app/urls.py` se puede vizualizar los templates creados.
+
+### Templates 2 
+
+En este paso se mostrará como utilizar los templates de Django y anexarle información. como texto
+
+```python
+def index(request):
+    return render(request, 'index.html', {
+        'title': 'Index',
+        'message': 'Hello world',
+    })
+```
+
+Se le incorpora un diccionario, que esté es llamado desde el tamplate `index.html`
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <h1>{{ title }}</h1>
+    <p>{{ message }}</p>
+</html>
+```
+
+**template Engine**
+Este formato de html, es un motor de plantilla de python, que permite renderizar el html, y además permite incorporar variables dentro del html, para ello se debe utilizar `{{}}` y se debe escribir el nombre de la variable que se quiere incorporar.
+
+Es por ello que una vez administrado por el servidor, se contruye el html, y se envia al navegador.
+
+En el back end, se puede utilizar python para realizar operaciones, y luego enviarlo al template.
+
+Se puede enviar, distintos valores, como listas, diccionarios, etc.
+
+los diccionario, lo proceas como texto, las listas ocurre lo mismo, entonces se imprime como un string. así `[1,2,3,4]`
+
+ahora veamos el ejemplo utilizando un diccionario que sale de projects.
+
+```python
+def projects(request):
+    projects = list(Project.objects.all().values())
+    return render(request, 'projects.html', {
+        'title': 'Projects',
+        'projects': projects,
+    })
+```
+
+

@@ -12,7 +12,10 @@ from .models import (Project, Task)
 # view llamada Index que no recibe parametros
 def index(request):
     # return HttpResponse("<h1>Index</h1>") # reemplazdo por render
-    return render(request, "index.html")
+    return render(request, 'index.html', {
+        'title': 'Index title append',
+        'message': 'Hello world',
+    })
 
 # view llamada Hello que recibe un parametro y lo imprime
 def hello(request, username:str):
@@ -24,10 +27,13 @@ def about(request):
 
 # Ahora crearemos una nueva vista llamada projects y otra llamada tasks
 def projects(request):
-    projects =list(Project.objects.all().values())
+    # projects =list(Project.objects.all().values())
+    projects = (Project.objects.all())
     #return HttpResponse("<h1>Projects</h1>") # reemplazdo por render
     # return JsonResponse(projects, safe=False)
-    return render(request, "projects.html")
+    return render(request, "projects.html",
+                  {'projects': projects}
+                  )
 
 def tasks(request,
           #id:int
