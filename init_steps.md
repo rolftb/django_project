@@ -820,4 +820,187 @@ def projects(request):
     })
 ```
 
+### Templates 3 blucle for
 
+En este paso se mostrará como utilizar los templates de Django y anexarle información. como texto desde una lista.
+
+Recordemos el ejemplo anterior, donde se envia una lista de proyectos, y se imprime como un string.
+
+```python
+def projects(request):
+    projects = list(Project.objects.all().values())
+    return render(request, 'projects.html', {
+        'title': 'Projects',
+        'projects': projects,
+    })
+```
+
+esto entrega el siguiente resultado:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <h1>Projects</h1>
+    <p>[{'id': 1, 'name': 'aplicacion movil'}, {'id': 2, 'name': 'aplicacion web usando Django'}]</p>
+</html>
+```
+
+ahora queremos que esto, sea un listado solo de los nombres
+
+```python
+def projects(request):
+    projects = Project.objects.all()
+    return render(request, 'projects.html', {
+        'title': 'Projects',
+        'projects': projects,
+    })
+```
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <h1>Projects</h1>
+    {% for project in projects %}
+        <p>{{ project.name }}</p>
+    {% endfor %}
+</html>
+
+se puede realizar lo mismo con las tareas
+```python
+def tasks(request):
+    tasks = Task.objects.all()
+    return render(request, 'tasks.html', {
+        'title': 'Tasks',
+        'tasks': tasks,
+    })
+```
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <h1>Tasks</h1>
+    {% for task in tasks %}
+        <p>{{ task.title }}</p>
+    {% endfor %}
+</html>
+```
+Acá no se le puede poner muchos espacios entre laos {} porque se rompe
+
+además se le puede incorporar la descripcio, de la misma forma que se realizó en title
+
+```html 
+<!DOCTYPE html>
+<html lang="en">
+    <h1>Tasks</h1>
+    {% for task in tasks %}
+        <p>{{ task.title }}</p>
+        <p>{{ task.description }}</p>
+    {% endfor %}
+</html>
+```
+
+# jinga
+
+## Templates 4 jinga
+
+jinja es un motor de plantillas de python, que permite renderizar el html, y además permite incorporar variables dentro del html, para ello se debe utilizar `{{}}` y se debe escribir el nombre de la variable que se quiere incorporar.
+
+si vemos en la documentación de jinga hay varias herramientas que se pueden utilizar.
+
+veremos como usar un html base utilizando jinga.
+
+se contruye un html base, que se llama `base.html` y se debe definir el siguiente código:
+
+para tener indice de los templates, se debe definir el siguiente código:
+
+```html
+<nav>
+    <ul>
+        <il>
+            <a href="{% url 'index' %}">Index</a>
+        </il>
+        <il>
+            <a href="{% url 'projects' %}">Projects</a>
+        </il>
+        <il>
+            <a href="{% url 'tasks' %}">Tasks</a>
+        </il>
+        <il>
+            <a href="{% url 'about' %}">About</a>
+        </il>
+    </ul>
+</nav>
+
+{% block content %}
+{% endblock %}
+```
+
+
+la última parte del código, permite que en ese lugar se pueda agregar contenido. que se quuiera conservar
+
+ahora en `index.html` se debe definir el siguiente código:
+
+```html
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Index</h1>
+    <p>Hello world</p>
+{% endblock %}
+```
+
+# Carga de archivos con Django 3:00:00
+
+`STATIC_URL = '/static/'` Esto es para definir la ruta de los archivos estáticos, como css, js, etc.
+
+el procesos de static_url, permite que uno pueda en la carpeta `static`  dentor de la carpeta de mi aplicación `first_app` pueda guardar archivos estáticos, como css, js.
+
+estos archivos estáticos, se pueden utilizar en los templates, para ello se debe definir el siguiente código:
+
+```html
+{% load static %}
+```
+
+La documentaicón incida que en el archivo `settings.py` se debe definir la siguiente variable:
+
+```python
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+``` 
+
+esto suele estar definido por defecto, pero si no está definido, se debe definir.
+
+ahora quiero cargar en el template `index.html` una imagen jpg que se encuentra en la carpeta `static` de la carpeta `first_app`
+
+```html
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <h1>Index</h1>
+    <p>Hello world</p>
+    <img src="{% static 'img/imagen.jpg' %}" alt="imagen">
+{% endblock %}
+```
+
+tambien se puede cargar css, para ello se debe crear un archivo css en la carpeta `static` de la carpeta `first_app` y se debe definir el siguiente código:
+
+```css
+body {
+    background-color: red;
+}
+```
+
+ahora en el template `index.html` se debe definir el siguiente código:
+
+```html
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <h1>Index</h1>
+    <p>Hello world</p>
+    <img src="{% static 'img/imagen.jpg' %}" alt="imagen">
+{% endblock %}
+```
